@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fengling.ggkt.vod.mapper.CourseMapper">
+
+    <!--CoursePublishVo selectCoursePublishVoBy(Long id);-->
+    <select id="selectCoursePublishVoBy" parameterType="Long" resultType="com.fengling.ggkt.vo.vod.CoursePublishVo">
+        SELECT
+               c.id,
+               c.title,
+               c.cover,
+               c.lesson_num AS lessonNum,
+               t.name       AS teacherName,
+               s1.title     AS subjectParentTitle,
+               s2.title     AS subjectTitle
+        FROM
+             <include refid="tables"/>
+        WHERE
+            c.id = #{id}
+    </select>
+    <!--    CourseVo selectCourseVoById(Long courseId);-->
+    <select id="selectCourseVoById" resultType="com.fengling.ggkt.vo.vod.CourseVo">
+        SELECT
+            c.id,
+            c.title,
+            c.lesson_num    AS lessonNum,
+            c.price,
+            c.cover,
+            c.buy_count     AS buyCount,
+            c.view_count    AS viewCount,
+            c.status,
+            c.publish_time  AS publishTime,
+            c.teacher_id    AS teacherId,
+            t.name          AS teacherName,
+            s1.title        AS subjectParentTitle,
+            s2.title        AS subjectTitle
+        FROM
+            <include refid="tables"/>
+        WHERE
+            c.id=#{id}
+    </select>
+
+    <sql id="tables">
+        course c
+                 LEFT OUTER JOIN teacher t on c.teacher_id = t.id
+                 LEFT OUTER JOIN subject s1 ON c.subject_parent_id = s1.id
+                 LEFT OUTER JOIN subject s2 ON c.subject_id = s2.id
+    </sql>
+</mapper>
